@@ -54,6 +54,12 @@ def runScript(event, script):
 
     elif script == "ctrlPanel":
         subprocess.run(["explorer", "Shell:ControlPanelFolder"])
+
+    elif script == "startup":
+        subprocess.run(["explorer", "Shell:Startup"])
+
+    elif script == "globalStartup":
+        subprocess.run(["explorer", "Shell:Common Startup"])
         
     elif script == "darkmode":
         keyPath = r"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"
@@ -254,5 +260,13 @@ button21.bind("<ButtonRelease-1>", lambda event: runScript(event, "progFiles64")
 button22 = customtkinter.CTkButton(commandsFrame, text="Open Program Files(x86)", width=45)
 button22.pack(padx = 10, pady = 5)
 button22.bind("<ButtonRelease-1>", lambda event: runScript(event, "progFiles86"))
+
+button23 = customtkinter.CTkButton(commandsFrame, text="Open Local Startup Folder", width=45)
+button23.pack(padx = 10, pady = 5)
+button23.bind("<ButtonRelease-1>", lambda event: runScript(event, "startup"))
+
+button24 = customtkinter.CTkButton(commandsFrame, text="Open Global Startup Folder", width=45)
+button24.pack(padx = 10, pady = 5)
+button24.bind("<ButtonRelease-1>", lambda event: runScript(event, "globalStartup"))
 
 window.mainloop()
