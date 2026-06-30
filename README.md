@@ -10,12 +10,3 @@ Use this program responsibly, especially on school or workplace computers.
 I do NOT accept liability for any repercussions from the use of this software.
 
 Functionality is not guaranteed on heavily restricted systems.
-
-Requirements
-
-This program requires the CustomTkinter Python library.
-
-Installation Guide: https://customtkinter.tomschimansky.com/documentation/
-
-You can install it with:
-pip install customtkinter
