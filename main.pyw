@@ -1,23 +1,19 @@
 import os
 import subprocess
-import tkinter
-from tkinter import PhotoImage
-import customtkinter
+import neotkinter as ntk
 import winreg
-from tkinter.filedialog import askdirectory
-from tkinter.filedialog import askopenfile
 import ctypes
 
-#reg values
+# reg values
+Registry = winreg.ConnectRegistry(None, winreg.HKEY_CURRENT_USER)
+key = winreg.OpenKey(Registry, "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize")
+value, regtype = winreg.QueryValueEx(key, "SystemUsesLightTheme")
+print(value)
+winreg.CloseKey(key)
 
 def runScript(event, script):
     if script == "shellApps":
         subprocess.run(["explorer", "shell:AppsFolder"])
-        
-    elif event == "loadRef":
-        Registry = winreg.ConnectRegistry(None, winreg.HKEY_CURRENT_USER)
-        key = winreg.OpenKey(Registry, "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize\\SystemUsesLightTheme")
-        print(key)
     
     elif script == "godMode":
         subprocess.run('start shell:::{ED7BA470-8E54-465E-825C-99712043E01C}', shell=True)
@@ -74,7 +70,7 @@ def runScript(event, script):
         subprocess.Popen("C:\\Windows\\System32\\cmd.exe")
 
     elif script == "setWallpaper":
-        path = askopenfile(initialdir="/", title="Select an image", filetypes=(("PNG Files", "*.png"), ("JPG Files", "*.jpg*"), ("JPEG Files", "*.jpeg*")))
+        path = ntk.filedialog.askopenfile(initialdir="/", title="Select an image", filetypes=(("PNG Files", "*.png"), ("JPG Files", "*.jpg*"), ("JPEG Files", "*.jpeg*")))
         path = path.name
 
         # Constants for setting the wallpaper
@@ -171,143 +167,136 @@ def runScript(event, script):
     elif script == "explorer2":
         subprocess.run(["explorer", "shell:AppsFolder\\c5e2524a-ea46-4f67-841f-6a9465d9d515_cw5n1h2txyewy!App"])
 
-window = customtkinter.CTk()
+window = ntk.NTk()
 window.geometry("500x600")
 
-runScript("e", "loadReg")
-
-customtkinter.set_appearance_mode("system")
-customtkinter.set_default_color_theme("blue")
-
-header = customtkinter.CTkLabel(window, text="SuperUser Control Panel")
+header = ntk.NTkLabel(window, text="SuperUser Control Panel")
 header.pack(padx = 10, pady = 5)
 
-tabview = customtkinter.CTkTabview(master=window)
-tabview.pack(padx=20, pady=5)
+tabview = ntk.NTkTabview(master=window)
+tabview.pack(padx=10, pady=10, expand=True, fill="both")
 tabview.configure(anchor="n")
 
 tabview.add("Commands")  # add tab at the end
 tabview.add("Settings")  # add tab at the end
 tabview.set("Commands")  # set currently visible tab
 
-tabview.tab("Commands").bind("<ButtonRelease-1>", lambda event: runScript(event, "LoadReg"))
-
 window.title("SuperUser Menu")
 
-commandsFrame = customtkinter.CTkScrollableFrame(master=tabview.tab("Commands"), width=400, height=500)
-commandsFrame.pack(fill="both", expand=True, padx=10, pady=10)
+commandsFrame = ntk.NTkScrollableFrame(master=tabview.tab("Commands"), width=400, height=500)
+commandsFrame.pack(padx=10, pady=10, expand=True, fill="both")
 
-settingsFrame = customtkinter.CTkScrollableFrame(master=tabview.tab("Settings"), width=400, height=500)
-settingsFrame.pack(fill="both", expand=True, padx=10, pady=10)
+settingsFrame = ntk.NTkScrollableFrame(master=tabview.tab("Settings"), width=400, height=500)
+settingsFrame.pack(padx=10, pady=10, expand=True, fill="both")
 
-button1 = customtkinter.CTkButton(commandsFrame, text="List All Installations", width=45)
+button1 = ntk.NTkButton(commandsFrame, text="List All Installations", width=45)
 button1.pack(padx = 10, pady = 5)
 button1.bind("<ButtonRelease-1>", lambda event: runScript(event, "shellApps"))
 
-button2 = customtkinter.CTkButton(commandsFrame, text="Godmode Settings", width=45)
+button2 = ntk.NTkButton(commandsFrame, text="Godmode Settings", width=45)
 button2.pack(padx = 10, pady = 5)
 button2.bind("<ButtonRelease-1>", lambda event: runScript(event, "godMode"))
 
-button3 = customtkinter.CTkButton(commandsFrame, text="Alternative File Explorer", width=45)
+button3 = ntk.NTkButton(commandsFrame, text="Alternative File Explorer", width=45)
 button3.pack(padx = 10, pady = 5)
 button3.bind("<ButtonRelease-1>", lambda event: runScript(event, "explorer2"))
 
-button4 = customtkinter.CTkButton(commandsFrame, text="Administrator Tools", width=45)
+button4 = ntk.NTkButton(commandsFrame, text="Administrator Tools", width=45)
 button4.pack(padx = 10, pady = 5)
 button4.bind("<ButtonRelease-1>", lambda event: runScript(event, "adminTools"))
 
-button5 = customtkinter.CTkButton(commandsFrame, text="Run Menu", width=45)
+button5 = ntk.NTkButton(commandsFrame, text="Run Menu", width=45)
 button5.pack(padx = 10, pady = 5)
 button5.bind("<ButtonRelease-1>", lambda event: runScript(event, "run"))
 
-button6 = customtkinter.CTkButton(commandsFrame, text="Local Start Menu Apps", width=45)
+button6 = ntk.NTkButton(commandsFrame, text="Local Start Menu Apps", width=45)
 button6.pack(padx = 10, pady = 5)
 button6.bind("<ButtonRelease-1>", lambda event: runScript(event, "start"))
 
-button7 = customtkinter.CTkButton(commandsFrame, text="Global Start Menu Apps", width=45)
+button7 = ntk.NTkButton(commandsFrame, text="Global Start Menu Apps", width=45)
 button7.pack(padx = 10, pady = 5)
 button7.bind("<ButtonRelease-1>", lambda event: runScript(event, "commonStart"))
 
-button8 = customtkinter.CTkButton(commandsFrame, text="Shutdown", width=45)
+button8 = ntk.NTkButton(commandsFrame, text="Shutdown", width=45)
 button8.pack(padx = 10, pady = 5)
 button8.bind("<ButtonRelease-1>", lambda event: runScript(event, "shutdown"))
 
-button9 = customtkinter.CTkButton(commandsFrame, text="Restart", width=45)
+button9 = ntk.NTkButton(commandsFrame, text="Restart", width=45)
 button9.pack(padx = 10, pady = 5)
 button9.bind("<ButtonRelease-1>", lambda event: runScript(event, "restart"))
 
-button9 = customtkinter.CTkButton(commandsFrame, text="Sign Out", width=45)
+button9 = ntk.NTkButton(commandsFrame, text="Sign Out", width=45)
 button9.pack(padx = 10, pady = 5)
 button9.bind("<ButtonRelease-1>", lambda event: runScript(event, "logout"))
 
-button10 = customtkinter.CTkButton(settingsFrame, text="Enable Dark Mode", width=45)
+button10 = ntk.NTkButton(settingsFrame, text="Enable Dark Mode", width=45)
 button10.pack(padx = 10, pady = 5)
 button10.bind("<ButtonRelease-1>", lambda event: runScript(event, "darkmode"))
 
-button11 = customtkinter.CTkButton(settingsFrame, text="Enable Light Mode", width=45)
+button11 = ntk.NTkButton(settingsFrame, text="Enable Light Mode", width=45)
 button11.pack(padx = 10, pady = 5)
 button11.bind("<ButtonRelease-1>", lambda event: runScript(event, "lightmode"))
 
-button12 = customtkinter.CTkButton(settingsFrame, text="Enable Window & Start Menu Transparency", width=45)
+button12 = ntk.NTkButton(settingsFrame, text="Enable Window & Start Menu Transparency", width=45)
 button12.pack(padx = 10, pady = 5)
 button12.bind("<ButtonRelease-1>", lambda event: runScript(event, "transparency1"))
 
-button13 = customtkinter.CTkButton(settingsFrame, text="Disable Window & Start Menu Transparency", width=45)
+button13 = ntk.NTkButton(settingsFrame, text="Disable Window & Start Menu Transparency", width=45)
 button13.pack(padx = 10, pady = 5)
 button13.bind("<ButtonRelease-1>", lambda event: runScript(event, "transparency0"))
 
-restartLabel = customtkinter.CTkLabel(settingsFrame, text="A system restart is advised after applying the above changes.", fg_color="transparent")
+restartLabel = ntk.NTkLabel(settingsFrame, text="A system restart is advised after applying the above changes.", fg_color="transparent")
 restartLabel.pack(padx = 10, pady = 0)
 
-button14 = customtkinter.CTkButton(commandsFrame, text="Open Windows Folder", width=45)
+button14 = ntk.NTkButton(commandsFrame, text="Open Windows Folder", width=45)
 button14.pack(padx = 10, pady = 5)
 button14.bind("<ButtonRelease-1>", lambda event: runScript(event, "windir"))
 
-button15 = customtkinter.CTkButton(commandsFrame, text="Open System32", width=45)
+button15 = ntk.NTkButton(commandsFrame, text="Open System32", width=45)
 button15.pack(padx = 10, pady = 5)
 button15.bind("<ButtonRelease-1>", lambda event: runScript(event, "sys32"))
 
-button16 = customtkinter.CTkButton(commandsFrame, text="Open Local Desktop", width=45)
+button16 = ntk.NTkButton(commandsFrame, text="Open Local Desktop", width=45)
 button16.pack(padx = 10, pady = 5)
 button16.bind("<ButtonRelease-1>", lambda event: runScript(event, "desktop"))
 
-button17 = customtkinter.CTkButton(commandsFrame, text="Open Global Desktop", width=45)
+button17 = ntk.NTkButton(commandsFrame, text="Open Global Desktop", width=45)
 button17.pack(padx = 10, pady = 5)
 button17.bind("<ButtonRelease-1>", lambda event: runScript(event, "globalDesktop"))
 
-button18 = customtkinter.CTkButton(commandsFrame, text="Open Control Panel", width=45)
+button18 = ntk.NTkButton(commandsFrame, text="Open Control Panel", width=45)
 button18.pack(padx = 10, pady = 5)
 button18.bind("<ButtonRelease-1>", lambda event: runScript(event, "ctrlPanel"))
 
-button19 = customtkinter.CTkButton(commandsFrame, text="Remove Or Modify Programs", width=45)
+button19 = ntk.NTkButton(commandsFrame, text="Remove Or Modify Programs", width=45)
 button19.pack(padx = 10, pady = 5)
 button19.bind("<ButtonRelease-1>", lambda event: runScript(event, "changePrograms"))
 
-button20 = customtkinter.CTkButton(commandsFrame, text="Open Program Files", width=45)
+button20 = ntk.NTkButton(commandsFrame, text="Open Program Files", width=45)
 button20.pack(padx = 10, pady = 5)
 button20.bind("<ButtonRelease-1>", lambda event: runScript(event, "progFiles"))
 
-button21 = customtkinter.CTkButton(commandsFrame, text="Open Program Files(x64)", width=45)
+button21 = ntk.NTkButton(commandsFrame, text="Open Program Files(x64)", width=45)
 button21.pack(padx = 10, pady = 5)
 button21.bind("<ButtonRelease-1>", lambda event: runScript(event, "progFiles64"))
 
-button22 = customtkinter.CTkButton(commandsFrame, text="Open Program Files(x86)", width=45)
+button22 = ntk.NTkButton(commandsFrame, text="Open Program Files(x86)", width=45)
 button22.pack(padx = 10, pady = 5)
 button22.bind("<ButtonRelease-1>", lambda event: runScript(event, "progFiles86"))
 
-button23 = customtkinter.CTkButton(commandsFrame, text="Open Local Startup Folder", width=45)
+button23 = ntk.NTkButton(commandsFrame, text="Open Local Startup Folder", width=45)
 button23.pack(padx = 10, pady = 5)
 button23.bind("<ButtonRelease-1>", lambda event: runScript(event, "startup"))
 
-button24 = customtkinter.CTkButton(commandsFrame, text="Open Global Startup Folder", width=45)
+button24 = ntk.NTkButton(commandsFrame, text="Open Global Startup Folder", width=45)
 button24.pack(padx = 10, pady = 5)
 button24.bind("<ButtonRelease-1>", lambda event: runScript(event, "globalStartup"))
 
-button25 = customtkinter.CTkButton(commandsFrame, text="Open Command Prompt (System32)", width=45)
+button25 = ntk.NTkButton(commandsFrame, text="Open Command Prompt (System32)", width=45)
 button25.pack(padx = 10, pady = 5)
 button25.bind("<ButtonRelease-1>", lambda event: runScript(event, "cmd"))
 
-button26 = customtkinter.CTkButton(commandsFrame, text="Set Desktop Wallpaper", width=45)
+button26 = ntk.NTkButton(commandsFrame, text="Set Desktop Wallpaper", width=45)
 button26.pack(padx = 10, pady = 5)
 button26.bind("<ButtonRelease-1>", lambda event: runScript(event, "setWallpaper"))
 
